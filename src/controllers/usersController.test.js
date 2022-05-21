@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const User = require("../database/models/User");
 const { userLogin, userRegister } = require("./usersController");
 
@@ -15,6 +16,10 @@ jest.mock("../database/models/User", () => ({
   findOne: jest.fn(),
   create: jest.fn(() => mockNewUser),
 }));
+jest.mock("bcrypt", () => ({
+  compare: jest.fn(),
+  hash: jest.fn(),
+}));
 
 describe("Given a userLogin function", () => {
   describe("When it is called", () => {
@@ -25,10 +30,11 @@ describe("Given a userLogin function", () => {
       };
 
       User.findOne.mockImplementation(() => true);
+      bcrypt.compare.mockImplementation(() => true);
 
       const req = {
         body: {
-          name: "Pepita",
+          username: "Pepita",
           password: "password",
         },
       };
@@ -51,7 +57,7 @@ describe("Given a userLogin function", () => {
 
       const req = {
         body: {
-          name: "Pepita",
+          username: "Pepita",
           password: "password",
         },
       };
@@ -72,6 +78,7 @@ describe("Given a userRegister function", () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
+      bcrypt.hash.mockImplementation(() => "hashedpassword");
 
       const req = {
         body: {
@@ -99,6 +106,7 @@ describe("Given a userRegister function", () => {
 
       const mockNext = jest.fn();
       User.findOne.mockImplementation(() => true);
+      bcrypt.hash.mockImplementation(() => "hashedpassword");
 
       const req = {
         body: {
