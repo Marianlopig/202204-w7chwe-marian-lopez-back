@@ -44,3 +44,34 @@ describe("Given a post /users/login endpoint", () => {
     });
   });
 });
+
+describe("Given a post /users/register endpoint", () => {
+  describe("When it receives a new user request", () => {
+    test("Then it should respond with a 200 status code and a token", async () => {
+      const response = await request(app)
+        .post("/users/register")
+        .send({
+          username: "Julia",
+          password: "password",
+        })
+        .expect(201);
+
+      expect(response.body.id).not.toBeNull();
+      expect(response.body.username).toBe("Julia");
+    });
+  });
+  describe("When it receives an already existing user request", () => {
+    test("Then it should respond with a 200 status code and a token", async () => {
+      const response = await request(app)
+        .post("/users/register")
+        .send({
+          username: "Marian",
+          password: "password",
+        })
+        .expect(409);
+
+      expect(response.body.error).toBe(true);
+      expect(response.body.message).toBe("user already exists");
+    });
+  });
+});
