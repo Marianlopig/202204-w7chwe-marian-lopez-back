@@ -21,4 +21,33 @@ const userLogin = async (req, res) => {
   }
 };
 
-module.exports = { userLogin };
+const userRegister = async (req, res, next) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (user) {
+    const error = new Error();
+    error.statusCode = 409;
+    error.customMessage = "user already exists";
+
+    next(error);
+  }
+
+  const encryptedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    const newUser = await User.create({
+      username,
+      password: encryptedPassword,
+    });
+
+    // eslint-disable-next-line no-underscore-dangle
+    res.status(201).json({ username: newUser.username, id: newUser._id });
+  } catch (error) {
+    error.statusCode = 400;
+    error.customMessage = "wrong user data";
+
+    next(error);
+  }
+};
+
+module.exports = { userLogin, userRegister };
