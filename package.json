@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --watchAll=false",
     "test-coverage": "jest --watchAll=false --coverage",
-    "start": "node .",
+    "start": "node src",
     "start-dev": "nodemon src -q",
     "prepare": "husky install"
   },
@@ -20,7 +20,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
-    "husky": "^7.0.4",
+    "husky": "^8.0.1",
     "jest": "^28.1.0",
     "mongoid": "^0.0.1",
     "nodemon": "^2.0.16",
