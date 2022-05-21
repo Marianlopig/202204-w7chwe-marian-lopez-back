@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "test-coverage": "npm run test -- --coverage --watchAll=false",
-    "start": "node .",
+    "start": "node src",
     "start-dev": "nodemon . -q",
     "prepare": "husky install"
   },
