@@ -33,8 +33,8 @@ const userRegister = async (req, res, next) => {
   const user = await User.findOne({ username });
   if (user) {
     const error = new Error();
-    error.statusCode = 409;
-    error.customMessage = "user already exists";
+    error.code = 409;
+    error.message = "user already exists";
 
     next(error);
   }
