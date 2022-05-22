@@ -2,6 +2,7 @@ const request = require("supertest");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const { mongoose } = require("mongoose");
 const bcrypt = require("bcrypt");
+const debug = require("debug")("isdiGram:usersRouterTest");
 const User = require("../database/models/User");
 const { app } = require("../server");
 const connectDB = require("../database");
@@ -26,8 +27,12 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
-  await mongoServer.stop();
+  try {
+    await mongoose.connection.close();
+    await mongoServer.stop();
+  } catch (e) {
+    debug("Error closing Mongo");
+  }
 });
 
 describe("Given a post /users/login endpoint", () => {
