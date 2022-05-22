@@ -1,6 +1,8 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const path = require("path");
 const User = require("../database/models/User");
 
 const userLogin = async (req, res) => {
@@ -29,26 +31,45 @@ const userLogin = async (req, res) => {
 };
 
 const userRegister = async (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, password, name } = req.body;
   const user = await User.findOne({ username });
+
   if (user) {
     const error = new Error();
     error.code = 409;
     error.message = "user already exists";
-
     next(error);
+    return;
   }
 
-  const encryptedPassword = await bcrypt.hash(password, 10);
-
   try {
-    const newUser = await User.create({
+    const encryptedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = {
+      name,
       username,
       password: encryptedPassword,
-    });
+    };
+    debugger;
+    const { file } = req;
+    if (file) {
+      const newFileName = `${Date.now()}-${file.originalname}`;
+      fs.rename(
+        path.join("tmp_images", file.filename),
+        path.join("images", newFileName),
+        (error) => {
+          if (error) {
+            next(error);
+          }
+        }
+      );
+      newUser.image = path.join(newFileName);
+    }
+
+    const savedUser = await User.create(newUser);
 
     // eslint-disable-next-line no-underscore-dangle
-    res.status(201).json({ username: newUser.username, id: newUser._id });
+    res.status(201).json({ username: savedUser.username, id: savedUser._id });
   } catch (error) {
     error.statusCode = 400;
     error.customMessage = "wrong user data";
