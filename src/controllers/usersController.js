@@ -50,7 +50,6 @@ const userRegister = async (req, res, next) => {
       username,
       password: encryptedPassword,
     };
-    debugger;
     const { file } = req;
     if (file) {
       const newFileName = `${Date.now()}-${file.originalname}`;
