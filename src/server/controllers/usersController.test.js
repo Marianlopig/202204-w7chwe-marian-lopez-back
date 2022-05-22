@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
-const User = require("../database/models/User");
-const { userLogin, userRegister } = require("./usersController");
+const User = require("../../database/models/User");
+const { userLogin, userRegister, getUsers } = require("./usersController");
 
 const mocktoken = "123";
 const mockNewUser = {
@@ -12,8 +12,9 @@ const mockNewUser = {
 jest.mock("jsonwebtoken", () => ({
   sign: () => mocktoken,
 }));
-jest.mock("../database/models/User", () => ({
+jest.mock("../../database/models/User", () => ({
   findOne: jest.fn(),
+  find: jest.fn(),
   create: jest.fn(() => mockNewUser),
 }));
 jest.mock("bcrypt", () => ({
@@ -122,6 +123,41 @@ describe("Given a userRegister function", () => {
       await userRegister(req, res, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a getusers function", () => {
+  describe("When it is called", () => {
+    test("Then it should call the response method with status 200 and it should return all users", async () => {
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      User.find.mockImplementation(() => [
+        {
+          _id: "1",
+          name: "PepitaDolores",
+          username: "Pepita",
+          password: "password",
+          image: "image.png",
+        },
+      ]);
+
+      const expectedResponse = [
+        {
+          id: "1",
+          name: "PepitaDolores",
+          username: "Pepita",
+          image: "image.png",
+        },
+      ];
+      const expectedStatus = 200;
+
+      await getUsers(null, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
     });
   });
 });

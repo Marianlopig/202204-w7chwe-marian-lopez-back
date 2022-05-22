@@ -3,9 +3,9 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const { mongoose } = require("mongoose");
 const bcrypt = require("bcrypt");
 const debug = require("debug")("isdiGram:usersRouterTest");
-const User = require("../database/models/User");
-const { app } = require("../server");
-const connectDB = require("../database");
+const User = require("../../database/models/User");
+const { app } = require("..");
+const connectDB = require("../../database");
 
 let mongoServer;
 
