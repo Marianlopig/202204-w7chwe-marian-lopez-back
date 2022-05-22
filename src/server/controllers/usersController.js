@@ -55,7 +55,7 @@ const userRegister = async (req, res, next) => {
     if (file) {
       const newFileName = `${Date.now()}-${file.originalname}`;
       fs.rename(
-        path.join("tmp_images", file.filename),
+        path.join("images", file.filename),
         path.join("images", newFileName),
         (error) => {
           if (error) {

@@ -6,7 +6,7 @@ const {
   getUsers,
 } = require("../controllers/usersController");
 
-const upload = multer({ dest: "tmp_images/" });
+const upload = multer({ dest: "images/" });
 
 const usersRouter = express.Router();
 
