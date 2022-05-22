@@ -62,7 +62,7 @@ const userRegister = async (req, res, next) => {
           }
         }
       );
-      newUser.image = path.join(newFileName);
+      newUser.image = newFileName;
     }
 
     const savedUser = await User.create(newUser);
