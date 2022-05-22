@@ -27,12 +27,8 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  try {
-    await mongoose.connection.close();
-    await mongoServer.stop();
-  } catch (e) {
-    debug("Error closing Mongo");
-  }
+  await mongoose.connection.close();
+  await mongoServer.stop();
 });
 
 describe("Given a post /users/login endpoint", () => {
