@@ -1,9 +1,10 @@
+const debug = require("debug")("users:src:controllers:usersControllers");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
-const User = require("../database/models/User");
+const User = require("../../database/models/User");
 
 const userLogin = async (req, res) => {
   try {
@@ -77,4 +78,24 @@ const userRegister = async (req, res, next) => {
   }
 };
 
-module.exports = { userLogin, userRegister };
+const getUsers = async (req, res, next) => {
+  try {
+    const users = await User.find();
+
+    const usersRet = users.map(({ _id: id, name, username, image }) => ({
+      id,
+      name,
+      username,
+      image,
+    }));
+
+    res.status(200).json(usersRet);
+    debug("users collection request received");
+  } catch (error) {
+    error.statusCode = 404;
+    error.customMessage = "Not found";
+    next(error);
+  }
+};
+
+module.exports = { userLogin, userRegister, getUsers };
