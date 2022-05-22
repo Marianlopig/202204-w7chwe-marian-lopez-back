@@ -82,9 +82,11 @@ describe("Given a userRegister function", () => {
 
       const req = {
         body: {
+          name: "PepitaDolores",
           username: "Pepita",
           password: "password",
         },
+        file: { originalname: "test.jpg", filename: "" },
       };
       const expectedStatus = 201;
 
